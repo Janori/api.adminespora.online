@@ -21,6 +21,7 @@ class DocumentsTable extends Migration
             $table->integer('file_id')->unsigned();
             $table->integer('customer_id')->unsigned();
             $table->integer('building_id')->unsigned();
+            $table->integer('rents_id')->unsigned();
             $table->string('data');
             $table->string('title');
             $table->char('kind')->default('x');
@@ -28,6 +29,7 @@ class DocumentsTable extends Migration
             $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->foreign('building_id')->references('id')->on('buildings')->onDelete('cascade');
+            $table->foreign('rents_id')->references('id')->on('rents')->onDelete('cascade');
         });
     }
 

@@ -26,10 +26,12 @@ class AuthController extends Controller{
       }catch(JWTException $e){
           return response()->json(JResponse::set(false, 'could not create token'), 500); //,500
       }
+      $user = JWTAuth::toUser($token);
       return response()->json(
           JResponse::set(true,'Token successfully created', ['token' => $token,
                                                              'ttl' => $this->expirationTime,
-                                                             'user' => JWTAuth::toUser($token)
+                                                             'user' => $user,
+                                                             'perms' => $user->role ? $user->role->permissions : null
                                                            ]), 200);
   }
 

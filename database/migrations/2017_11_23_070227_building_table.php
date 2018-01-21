@@ -28,8 +28,8 @@ class BuildingTable extends Migration
           $table->timestamps();
 
           $table->decimal('price', 12, 2);
-          $table->decimal('mantainance_cost', 12, 2);
-          $table->char('mantainance_period')->default('M');
+          $table->decimal('maintenance_cost', 12, 2);
+          $table->char('maintenance_period')->default('M');
           $table->float('com_percent');
           $table->integer('minimum_rent_period');
           $table->integer('deposit_number');

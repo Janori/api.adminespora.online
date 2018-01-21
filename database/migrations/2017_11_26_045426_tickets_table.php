@@ -28,11 +28,12 @@ class TicketsTable extends Migration
             $table->date('estimated_date')->nullable();
             $table->date('finalized_date')->nullable();
             $table->string('extra')->nullable();
-            $table->char('status')->default('o');
+            $table->char('status', 1)->default('o');
 
             $table->foreign('building_id')->references('id')->on('buildings')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('provider_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreign('applicant_id')->references('id')->on('customers')->onDelete('cascade');
         });
     }
 

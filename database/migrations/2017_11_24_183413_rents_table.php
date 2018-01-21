@@ -19,6 +19,7 @@ class RentsTable extends Migration
           $table->collation = 'utf8_general_ci';
           $table->increments('id');
           $table->integer('renter_id')->unsigned()->nullable();
+          $table->integer('user_id')->unsigned()->nullable();
           $table->integer('building_id')->unsigned()->nullable();
 
 
@@ -34,6 +35,7 @@ class RentsTable extends Migration
           $table->integer('deposits_number');
 
           $table->foreign('renter_id')->references('id')->on('rents')->onDelete('cascade');
+          $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
           $table->foreign('building_id')->references('id')->on('buildings')->onDelete('cascade');
       });
     }

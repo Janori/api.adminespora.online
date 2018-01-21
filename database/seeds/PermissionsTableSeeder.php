@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Permission;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -9,8 +10,14 @@ class PermissionsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        //
+    public function run(){
+	    $permissions = array(
+	      ['code'=>'p_all', 'path_regex' => '.*', 'description' => ''], 
+	      ['code'=>'p_n_user', 'path_regex' => '.*', 'description' => ''], 
+	    );
+
+	    foreach($permission as $permissions){
+	      Permission::create($permission);
+	    }
     }
 }
