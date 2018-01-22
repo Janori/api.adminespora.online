@@ -17,7 +17,7 @@ class LandsTable extends Migration
           $table->charset = 'utf8';
           $table->collation = 'utf8_general_ci';
           $table->increments('id');
-          $table->boolean('for_sale');
+          // $table->boolean('for_sale');
           $table->string('location');
           $table->decimal('price', 12, 2);
           $table->float('surface');

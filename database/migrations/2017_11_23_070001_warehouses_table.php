@@ -20,7 +20,7 @@ class WarehousesTable extends Migration
           $table->increments('id');
           $table->boolean('is_new');
           $table->float('build_surface');
-          $table->date('building_date');
+          $table->integer('building_year');
       });
     }
 

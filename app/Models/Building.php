@@ -31,7 +31,7 @@ class Building extends Model
     public function office(){
     	return $this->belongsTo('App\Models\Office');
     }
-    public function house(){
+    public function housing(){
     	return $this->belongsTo('App\Models\Housing');
     }
 

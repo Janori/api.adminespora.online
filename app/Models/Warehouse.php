@@ -9,5 +9,5 @@ class Warehouse extends Model{
 
     public $timestamps = false;
 
-    protected $fillable = ['is_new', 'build_surface', 'building_date'];
+    protected $fillable = ['is_new', 'build_surface', 'building_year'];
 }
