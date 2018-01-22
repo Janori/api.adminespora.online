@@ -23,16 +23,16 @@ class BuildingController extends Controller{
             $land = Land::create($request->all()['land']);
             $warehouse = Warehouse::create($request->all()['warehouse']);
             $office = Office::create($request->all()['office']);
-            $house = Housing::create($request->all()['housing']);
+            $housing = Housing::create($request->all()['housing']);
             $building = new Building($request->all());
             $building->land_id = $land->id;
   	        $building->warehouse_id = $warehouse->id;
-  	        $building->house_id = $house->id;
+  	        $building->house_id = $housing->id;
   	        $building->office_id = $office->id;
             /*$building = Building::create([
                 "land_id" => $land->id,
                 "warehouse_id" => $warehouse->id,
-                "house_id" => $house->id,
+                "house_id" => $housing->id,
                 "office_id" => $office->id,
                 "extra_data" => $request->has('extra_data') ? $request->all()['extra_data'] : ""
             ]);*/
@@ -54,7 +54,7 @@ class BuildingController extends Controller{
 	    }
 	    foreach ($request->all() as $key => $value){
         if($key == 'land' || $key == 'warehouse' || $key == 'office' || $key == 'housing'){
-          if($key == 'housing') $key = 'house';
+          if($key == 'housing') $key = 'housing';
           if($obj->{$key}){
             $this->updateModel($obj->{$key}, $value);
             $obj->{$key}->save();
@@ -82,7 +82,7 @@ class BuildingController extends Controller{
     if(is_null($id) || !is_numeric($id)){
       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
     }
-    $obj = Building::with('Land','House','Office','Warehouse')->find($id);
+    $obj = Building::with('Land','Housing','Office','Warehouse')->find($id);
     if($obj == null){
       return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
     }
@@ -93,7 +93,7 @@ class BuildingController extends Controller{
         $from = $request->input('from', 0);
         $count = $request->input('count', 10);
 
-        $query = Building::with('Land','House','Office','Warehouse');
+        $query = Building::with('Land','Housing','Office','Warehouse');
 
         $k = $query->count();
         $objs = $query->get();
