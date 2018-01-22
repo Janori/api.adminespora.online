@@ -33,6 +33,8 @@ class BuildingTable extends Migration
           $table->float('com_percent');
           $table->integer('minimum_rent_period');
           $table->integer('deposit_number');
+          $table->boolean('is_rented')->default(false);
+          $table->char('kind', 2)->default('xx');
 
           $table->foreign('owner_id')->references('id')->on('customers')->onDelete('no action');
           $table->foreign('land_id')->references('id')->on('lands')->onDelete('cascade');

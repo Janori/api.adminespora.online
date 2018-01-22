@@ -33,11 +33,12 @@ Route::group(['middleware'=>['jwt.auth']], function () {
   });
     // Buildings
   Route::group(['prefix' => 'buildings'], function (){
+    Route::get('types', 'BuildingController@getTypes');
+    Route::get('', 'BuildingController@search');
     Route::post('', 'BuildingController@create');
     Route::put('{id}', 'BuildingController@update');
     Route::delete('{id}', 'BuildingController@delete');
     Route::get('{id}', 'BuildingController@getOne');
-    Route::get('', 'BuildingController@search');
   });
     // Catalog
   Route::group(['prefix' => 'cat'], function(){

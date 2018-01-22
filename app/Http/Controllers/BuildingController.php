@@ -16,6 +16,15 @@ use Carbon;
 
 class BuildingController extends Controller{
 
+    public static $building_type = [
+      	['code' => 'c', 'name'=>'Casa', 'child'=>'house'],
+        ['code' => 'x', 'name'=>'Sin definir', 'child'=>'all'],
+  	];
+
+    public function getTypes(){
+      return response()->json(JResponse::set(true, '[keys]', BuildingController::$building_type), 200);
+    }
+
     public function create(Request $request){
 
     	try {
@@ -70,7 +79,7 @@ class BuildingController extends Controller{
 
 	}
 
-    private function updateModel($obj, $dic){
+  private function updateModel($obj, $dic){
     foreach ($dic as $key => $value){
       if(!is_null($value) && $key != 'id'){
             $obj->{$key} = $value;
@@ -78,7 +87,7 @@ class BuildingController extends Controller{
     }
   }
 
-    public function getOne($id){
+  public function getOne($id){
     if(is_null($id) || !is_numeric($id)){
       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
     }
@@ -89,17 +98,17 @@ class BuildingController extends Controller{
     return response()->json(JResponse::set(true, $obj), 200);
   }
 
-    public function search(Request $request){
-        $from = $request->input('from', 0);
-        $count = $request->input('count', 10);
+  public function search(Request $request){
+      $from = $request->input('from', 0);
+      $count = $request->input('count', 10);
 
-        $query = Building::with('Land','House','Office','Warehouse');
+      $query = Building::with('Land','House','Office','Warehouse');
 
-        $k = $query->count();
-        $objs = $query->get();
+      $k = $query->count();
+      $objs = $query->get();
 
-        return response()->json(JResponse::set(true, '[obj]', $objs), 200)->header('rowcount', $k);
-    }
+      return response()->json(JResponse::set(true, '[obj]', $objs), 200)->header('rowcount', $k);
+  }
 
 	public function delete($id){
 	    if(is_null($id) || !is_numeric($id))

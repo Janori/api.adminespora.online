@@ -34,7 +34,7 @@ class RentsTable extends Migration
           $table->float('commission_percent');
           $table->integer('deposits_number');
 
-          $table->foreign('renter_id')->references('id')->on('rents')->onDelete('cascade');
+          $table->foreign('renter_id')->references('id')->on('customers')->onDelete('cascade');
           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
           $table->foreign('building_id')->references('id')->on('buildings')->onDelete('cascade');
       });
