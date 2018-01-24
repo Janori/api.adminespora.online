@@ -53,9 +53,11 @@ class UserController extends Controller{
       return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
     }
 
-    foreach ($request->all() as $key => $value)
+    $obj->fill($request->all());
+
+    /*foreach ($request->all() as $key => $value)
         if(!is_null($value) && $key != 'id')
-            $obj->{$key} = $value;
+            $obj->{$key} = $value;*/
 
     return JResponse::saveModel($obj, true, '', 200);
 

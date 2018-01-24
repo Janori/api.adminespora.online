@@ -39,6 +39,9 @@ Route::group(['middleware'=>['jwt.auth']], function () {
     Route::put('{id}', 'BuildingController@update');
     Route::delete('{id}', 'BuildingController@delete');
     Route::get('{id}', 'BuildingController@getOne');
+    Route::get('{id}/images', 'BuildingController@getImages');
+    Route::post('{id}/images', 'BuildingController@loadImage');
+    Route::delete('images/{id}', 'BuildingController@deleteImage');
   });
     // Catalog
   Route::group(['prefix' => 'cat'], function(){

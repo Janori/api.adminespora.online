@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Common\JResponse;
 use App\Models\Land;
 use App\Models\Warehouse;
 use App\Models\Office;
 use App\Models\Housing;
 use App\Models\Building;
+use App\Models\BuildingImages;
 
 
 use Input;
 use Carbon;
+use Storage;
 
 class BuildingController extends Controller{
 
@@ -63,7 +66,7 @@ class BuildingController extends Controller{
 	    }
 	    foreach ($request->all() as $key => $value){
         if($key == 'land' || $key == 'warehouse' || $key == 'office' || $key == 'housing'){
-          if($key == 'housing') $key = 'housing';
+          //if($key == 'housing') $key = 'housing';
           if($obj->{$key}){
             $this->updateModel($obj->{$key}, $value);
             $obj->{$key}->save();
@@ -91,23 +94,65 @@ class BuildingController extends Controller{
     if(is_null($id) || !is_numeric($id)){
       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
     }
-    $obj = Building::with('Land','Housing','Office','Warehouse')->find($id);
+    $obj = Building::with('Land','Housing','Office','Warehouse', 'Images')->find($id);
     if($obj == null){
       return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
     }
-    return response()->json(JResponse::set(true, $obj), 200);
+    return response()->json(JResponse::set(true, 'obj', $obj), 200);
   }
 
   public function search(Request $request){
       $from = $request->input('from', 0);
       $count = $request->input('count', 10);
 
-      $query = Building::with('Land','House','Office','Warehouse');
+      $query = Building::with('Land','Housing','Office','Warehouse');
 
       $k = $query->count();
       $objs = $query->get();
 
       return response()->json(JResponse::set(true, '[obj]', $objs), 200)->header('rowcount', $k);
+  }
+
+  public function loadImage(Request $request, $id){
+      if(is_null($id) || !is_numeric($id))
+         return response()->json(JResponse::set(false, 'Error en la petición'), 400);
+
+      $fileName = Storage::disk('uploads')->put($id, $request->file('image'));
+      $img = new BuildingImages();
+      $img->building_id = $id;
+      $img->path = 'uploads/' . $fileName;
+
+      return JResponse::saveModel($img, true, '', 200);
+  }
+
+  public function deleteImage($image_id){
+    if(is_null($image_id) || !is_numeric($image_id))
+       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
+
+    $image = BuildingImages::find($image_id);
+    if($image == null) return response()->json(JResponse::set(false, 'Recurso no encontrado'), 404);
+
+    try{
+      if(!Storage::disk('uploads')->delete(str_replace('uploads/', '',$image->path))){
+        Log::warning('No se pudo eliminar el archivo: ' . $image->path . ', eliminar manualmente.', $e);
+      }
+    }catch(\Exception $e){
+      Log::warning('No se pudo eliminar el archivo: ' . $image->path . ', eliminar manualmente.', $e);
+    }
+
+    return JResponse::deleteModel($image);
+  }
+
+  public function getImages($id){
+    if(is_null($id) || !is_numeric($id))
+       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
+
+    $query = BuildingImages::where('building_id', $id);
+
+    $k = $query->count();
+    $objs = $query->get();
+
+    return response()->json(JResponse::set(true, '[obj]', $objs), 200)->header('rowcount', $k);
   }
 
 	public function delete($id){
@@ -117,6 +162,6 @@ class BuildingController extends Controller{
 	    if($obj == null)
            return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
 
-        return JResponse::deleteModel($obj);
+      return JResponse::deleteModel($obj);
 	}
 }
