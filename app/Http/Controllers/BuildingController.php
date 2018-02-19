@@ -76,10 +76,10 @@ class BuildingController extends Controller{
             $obj->{$key.'_id'} = $temp->id;
           }
         }else if(!is_null($value) && $key != 'id'){
-	            $obj->{$key} = $value;
+	            $obj->fill([ $key => $value]);
         }
       }
-	    return JResponse::saveModel($obj, true, '', 200);
+	    return JResponse::saveModel($obj, true, 'Imueble editado con éxito', 200);
 
 	}
 
@@ -115,11 +115,7 @@ class BuildingController extends Controller{
   }
 
   private function updateModel($obj, $dic){
-    foreach ($dic as $key => $value){
-      if(!is_null($value) && $key != 'id'){
-            $obj->{$key} = $value;
-      }
-    }
+      $obj->fill($dic);
   }
 
   public function getOne($id){
@@ -190,7 +186,7 @@ class BuildingController extends Controller{
 	public function delete($id){
 	    if(is_null($id) || !is_numeric($id))
 	       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
-	    $obj = User::find($id);
+	    $obj = Building::find($id);
 	    if($obj == null)
            return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
 
