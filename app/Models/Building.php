@@ -34,6 +34,17 @@ class Building extends Model
     public function housing(){
     	return $this->belongsTo('App\Models\Housing', 'house_id', 'id');
     }
+    public function owner(){
+    	return $this->belongsTo('App\Models\Housing');
+    }
+
+    public function debts(){
+      return $this->hasMany('App\Models\Payment', 'building_id', 'id');
+    }
+
+    public function rents(){
+      return $this->hasMany('App\Models\Rents', 'building_id', 'id');
+    }
 
 
 }

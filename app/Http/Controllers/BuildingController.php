@@ -10,11 +10,12 @@ use App\Models\Warehouse;
 use App\Models\Office;
 use App\Models\Housing;
 use App\Models\Building;
+use App\Models\Payment;
 use App\Models\BuildingImages;
 
 
 use Input;
-use Carbon;
+use Carbon\Carbon;
 use Storage;
 
 class BuildingController extends Controller{
@@ -24,40 +25,40 @@ class BuildingController extends Controller{
         ['code' => 'x', 'name'=>'Sin definir', 'child'=>'all'],
   	];
 
-    public function getTypes(){
-      return response()->json(JResponse::set(true, '[keys]', BuildingController::$building_type), 200);
-    }
+  public function getTypes(){
+    return response()->json(JResponse::set(true, '[keys]', BuildingController::$building_type), 200);
+  }
 
-    public function create(Request $request){
+  public function create(Request $request){
 
-    	try {
-            \DB::connection()->getPdo()->beginTransaction();
-            $land = Land::create($request->all()['land']);
-            $warehouse = Warehouse::create($request->all()['warehouse']);
-            $office = Office::create($request->all()['office']);
-            $housing = Housing::create($request->all()['housing']);
-            $building = new Building($request->all());
-            $building->land_id = $land->id;
-  	        $building->warehouse_id = $warehouse->id;
-  	        $building->house_id = $housing->id;
-  	        $building->office_id = $office->id;
-            /*$building = Building::create([
-                "land_id" => $land->id,
-                "warehouse_id" => $warehouse->id,
-                "house_id" => $housing->id,
-                "office_id" => $office->id,
-                "extra_data" => $request->has('extra_data') ? $request->all()['extra_data'] : ""
-            ]);*/
-            $building->save();
-            \DB::connection()->getPdo()->commit();
-            return response()->json(JResponse::set(true, 'obj', $building), 201);
-        } catch (\PDOException $e) {
-            \DB::connection()->getPdo()->rollBack();
-            return response()->json(JResponse::set(false, 'Datos incorrectos.', $e), 400);
-        }
-    }
+  	try {
+          \DB::connection()->getPdo()->beginTransaction();
+          $land = Land::create($request->all()['land']);
+          $warehouse = Warehouse::create($request->all()['warehouse']);
+          $office = Office::create($request->all()['office']);
+          $housing = Housing::create($request->all()['housing']);
+          $building = new Building($request->all());
+          $building->land_id = $land->id;
+	        $building->warehouse_id = $warehouse->id;
+	        $building->house_id = $housing->id;
+	        $building->office_id = $office->id;
+          /*$building = Building::create([
+              "land_id" => $land->id,
+              "warehouse_id" => $warehouse->id,
+              "house_id" => $housing->id,
+              "office_id" => $office->id,
+              "extra_data" => $request->has('extra_data') ? $request->all()['extra_data'] : ""
+          ]);*/
+          $building->save();
+          \DB::connection()->getPdo()->commit();
+          return response()->json(JResponse::set(true, 'obj', $building), 201);
+      } catch (\PDOException $e) {
+          \DB::connection()->getPdo()->rollBack();
+          return response()->json(JResponse::set(false, 'Datos incorrectos.', $e), 400);
+      }
+  }
 
-    public function update(Request $request, $id){
+  public function update(Request $request, $id){
     	if(is_null($id) || !is_numeric($id))
         return response()->json(JResponse::set(false, 'Error en la petición'), 400);
 	    $obj = Building::find($id);
@@ -82,6 +83,37 @@ class BuildingController extends Controller{
 
 	}
 
+  public function debts($id){
+    if(is_null($id) || !is_numeric($id))
+      return response()->json(JResponse::set(false, 'Error en la petición'), 400);
+    $obj = Building::with('debts')->find($id);
+    if($obj == null){
+      return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
+    }
+    //$obj = Building::with('images')->find($id);
+
+    $k = count($obj->debts);
+
+    return response()->json(JResponse::set(true, '[obj]', $obj->debts), 200)->header('rowcount', $k);
+
+  }
+
+  public function expired_debts(Request $request,$id){
+    $days = $request->input('days', 0);
+    if(is_null($id) || !is_numeric($id))
+      return response()->json(JResponse::set(false, 'Error en la petición'), 400);
+    $obj = Payment::where('building_id', $id)
+                    ->where('paid_out', 0)
+                    ->where('due_date', '<', Carbon::now()->addDays($days))->get();
+    if($obj == null){
+      return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
+    }
+    $k = count($obj);
+
+    return response()->json(JResponse::set(true, '[obj]', $obj), 200)->header('rowcount', $k);
+
+  }
+
   private function updateModel($obj, $dic){
     foreach ($dic as $key => $value){
       if(!is_null($value) && $key != 'id'){
@@ -94,7 +126,7 @@ class BuildingController extends Controller{
     if(is_null($id) || !is_numeric($id)){
       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
     }
-    $obj = Building::with('Land','Housing','Office','Warehouse', 'Images')->find($id);
+    $obj = Building::with('Land','Housing','Office','Warehouse', 'Images', 'Rents')->find($id);
     if($obj == null){
       return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
     }

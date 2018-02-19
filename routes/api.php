@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 Route::get('test', 'TestController@test');
 Route::post('auth', 'AuthController@authenticate');
 
-Route::group(['middleware'=>['jwt.auth']], function () {
+Route::group(['middleware'=>['cors', 'jwt.auth']], function () {
 	// Customers
   Route::group(['prefix' => 'customers'], function (){
     Route::post('', 'CustomerController@create');
@@ -42,10 +42,33 @@ Route::group(['middleware'=>['jwt.auth']], function () {
     Route::get('{id}/images', 'BuildingController@getImages');
     Route::post('{id}/images', 'BuildingController@loadImage');
     Route::delete('images/{id}', 'BuildingController@deleteImage');
+    Route::get('{id}/debts', 'BuildingController@debts');
+    Route::get('{id}/debts/expired', 'BuildingController@expired_debts');
   });
     // Catalog
   Route::group(['prefix' => 'cat'], function(){
   	Route::get('roles', 'RolesController@getAll');
   });
 
+  //rents
+  Route::group(['prefix' => 'rents'], function(){
+    Route::get('', 'RentsController@getAll');
+  	Route::post('init', 'RentsController@initRent');
+    Route::get('{id}', 'RentsController@getOne');
+    Route::post('{id}/complete', 'RentsController@completeRent');
+    Route::get('{id}/genpdf', 'RentsController@genPDF');
+    Route::get('{id}/contract', 'RentsController@getPDF');
+  });
+
+  //payments
+  Route::group(['prefix' => 'payments'], function(){
+    Route::get('', 'PaymentsController@getAll');
+    Route::get('{id}', 'PaymentsController@getOne');
+  });
+
+  //tickets
+  Route::group(['prefix' => 'tickets'], function(){
+    Route::post('open', 'TicketsController@openTicket');
+    Route::post('close', 'TicketsController@closeTicket');
+  });
 });

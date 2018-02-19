@@ -14,9 +14,20 @@ class CustomerController extends Controller
   public function search(Request $request){
     $from = $request->input('from', 0);
     $count = $request->input('count', 10);
+    $kind = $request->input('kind', null);
+    $word = $request->input('word', null);
 
-    $query = Customer::where(function($q) {
-
+    $query = Customer::where(function($q) use($kind, $word) {
+      if($kind != null){
+        $q->where('kind', $kind);
+      }
+      if($word != null){
+        $q->where(function($q) use($word){
+          $q->where('name', 'like', $word . '%');
+          $q->orWhere('first_surname', 'like', $word . '%');
+          $q->orWhere('last_surname', 'like', $word . '%');
+        });
+      }
     });
 
     $k = $query->count();
