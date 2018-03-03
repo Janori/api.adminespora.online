@@ -15,6 +15,10 @@ use Illuminate\Http\Request;
 Route::get('test', 'TestController@test');
 Route::post('auth', 'AuthController@authenticate');
 
+Route::group([], function(){
+  Route::get('tickets/response', 'TicketsController@response');
+});
+
 Route::group(['middleware'=>['cors', 'jwt.auth']], function () {
 	// Customers
   Route::group(['prefix' => 'customers'], function (){
@@ -68,7 +72,9 @@ Route::group(['middleware'=>['cors', 'jwt.auth']], function () {
 
   //tickets
   Route::group(['prefix' => 'tickets'], function(){
+    Route::get('test', 'TicketsController@test');
     Route::post('open', 'TicketsController@openTicket');
     Route::post('close', 'TicketsController@closeTicket');
+    Route::post('{id}/quote', 'TicketsController@setProvider');
   });
 });

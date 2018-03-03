@@ -8,29 +8,29 @@ class Ticket extends Model{
   protected $table = 'tickets';
 
   protected $fillable = [
-    'charge_to',
-    'pay_to',
+    'requester_id',
+    'data',
+    'provider_id',
+    'provider_cost',
     'building_id',
-    'ticket_id',
-    'charge',
-    'charge_payment',
-    'paying',
-    'paying_payment',
-    'due_date',
-    'paid_out',
-    'kind',
+    'extra',
+    'status',
+    'price',
+    'request_hash',
+    'email_sended'
   ];
 
-  public function charge(){
-      return $this->hasOne('App\Models\Customer');
-  }
-  public function pay(){
-      return $this->hasOne('App\Models\Customer');
-  }
   public function building(){
       return $this->hasOne('App\Models\Building');
   }
-  public function ticket(){
-      return $this->hasOne('App\Models\Ticket');
+  public function agent(){
+      return $this->hasOne('App\User');
   }
+  public function provider(){
+      return $this->hasOne('App\Models\Customer');
+  }
+  public function requester(){
+      return $this->hasOne('App\Models\Customer');
+  }
+
 }

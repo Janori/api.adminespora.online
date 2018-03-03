@@ -25,7 +25,7 @@ class RentsController extends Controller{
     if(is_null($id) || !is_numeric($id)){
       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
     }
-    $obj = Rents::find($id);
+    $obj = Rents::find($id); //with('renter')->
     if($obj == null){
       return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
     }

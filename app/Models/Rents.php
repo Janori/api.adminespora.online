@@ -23,7 +23,7 @@ class Rents extends Model{
   ];
 
   public function renter(){
-      return $this->hasOne('App\Models\Customer');
+      return $this->belongsTo('App\Models\Customer');
   }
   public function agent(){
       return $this->hasOne('App\User');

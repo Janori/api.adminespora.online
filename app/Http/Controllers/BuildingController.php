@@ -79,7 +79,7 @@ class BuildingController extends Controller{
 	            $obj->fill([ $key => $value]);
         }
       }
-	    return JResponse::saveModel($obj, true, 'Imueble editado con éxito', 200);
+	    return JResponse::saveModel($obj, true, 'Inmueble editado con éxito', 200);
 
 	}
 
@@ -123,6 +123,11 @@ class BuildingController extends Controller{
       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
     }
     $obj = Building::with('Land','Housing','Office','Warehouse', 'Images', 'Rents')->find($id);
+    if($obj->rents){
+      foreach($obj->rents as $r){
+        $r->renter;
+      }
+    }
     if($obj == null){
       return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
     }
