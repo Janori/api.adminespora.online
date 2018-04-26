@@ -65,6 +65,7 @@ class RentsController extends Controller{
     if($obj == null){
       return response()->json(JResponse::set(false, 'Recurso no encontrado.'), 404);
     }
+    $facturable = $request->has('isFacturable') && $request->get('isFacturable', '') == 'true';
     $fileName = null;
     try {
         \DB::connection()->getPdo()->beginTransaction();
@@ -84,6 +85,7 @@ class RentsController extends Controller{
           $payment->paying_payment = 0;
           $payment->due_date = (new Carbon($obj->start_date))->addMonths($i);
           $payment->kind = 'r';
+          $payment->facturable = $facturable;
           $payment->save();
           $payment = new Payment();
         }

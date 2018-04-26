@@ -17,20 +17,21 @@ class Ticket extends Model{
     'status',
     'price',
     'request_hash',
-    'email_sended'
+    'email_sended',
+    'facturable'
   ];
 
   public function building(){
-      return $this->hasOne('App\Models\Building');
+      return $this->belongsTo('App\Models\Building');
   }
   public function agent(){
-      return $this->hasOne('App\User');
+      return $this->belongsTo('App\User');
   }
   public function provider(){
-      return $this->hasOne('App\Models\Customer');
+      return $this->belongsTo('App\Models\Customer');
   }
   public function requester(){
-      return $this->hasOne('App\Models\Customer');
+      return $this->belongsTo('App\Models\Customer');
   }
 
 }

@@ -32,6 +32,8 @@ class TicketsTable extends Migration
             $table->string('request_hash')->nullable();
 
             $table->timestamps();
+            
+            $table->boolean('facturable')->default(false);
 
             $table->foreign('building_id')->references('id')->on('buildings')->onDelete('cascade');
             $table->foreign('agent_id')->references('id')->on('users')->onDelete('cascade');

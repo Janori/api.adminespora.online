@@ -36,6 +36,8 @@ class BuildingTable extends Migration
           $table->boolean('is_rented')->default(false);
           $table->char('kind', 2)->default('xx');
 
+          $table->string('cadastral_key')->default('');
+
           $table->foreign('owner_id')->references('id')->on('customers')->onDelete('no action');
           $table->foreign('land_id')->references('id')->on('lands')->onDelete('cascade');
           $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');

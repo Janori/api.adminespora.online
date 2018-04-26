@@ -74,7 +74,7 @@ Route::group(['middleware'=>['cors', 'jwt.auth']], function () {
   Route::group(['prefix' => 'tickets'], function(){
     Route::get('test', 'TicketsController@test');
     Route::post('open', 'TicketsController@openTicket');
-    Route::post('close', 'TicketsController@closeTicket');
+    Route::post('{id}/close', 'TicketsController@closeTicket');
     Route::post('{id}/quote', 'TicketsController@setProvider');
   });
 });

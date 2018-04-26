@@ -36,6 +36,7 @@ class RentsTable extends Migration
           $table->dateTime('start_date')->nullable();
           $table->string('contract_path')->nullable();
           $table->string('extra_data')->nullable();
+          $table->boolean('facturable')->default(false);
 
           $table->foreign('renter_id')->references('id')->on('customers')->onDelete('cascade');
           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -10,7 +10,7 @@ class Land extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['location', 'price', 'surface', 'predial_cost'];
+    protected $fillable = ['location', 'price', 'surface', 'predial_cost', 'predial_date'];
 
     public function land(){
     	return $this->belongsTo('App\Models\Land');

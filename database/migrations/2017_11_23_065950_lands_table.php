@@ -22,6 +22,7 @@ class LandsTable extends Migration
           //$table->decimal('price', 12, 2);
           $table->float('surface');
           $table->decimal('predial_cost', 12,2);
+          $table->date('predial_date')->nullable();
       });
     }
 

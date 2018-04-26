@@ -18,6 +18,7 @@ class Payment extends Model{
     'paying_payment',
     'due_date',
     'paid_out',
+    'facturable',
     'kind',
   ];
 

@@ -122,10 +122,17 @@ class BuildingController extends Controller{
     if(is_null($id) || !is_numeric($id)){
       return response()->json(JResponse::set(false, 'Error en la petición'), 400);
     }
-    $obj = Building::with('Land','Housing','Office','Warehouse', 'Images', 'Rents')->find($id);
+    $obj = Building::with('Land','Housing','Office','Warehouse', 'Images', 'Rents', 'Tickets')->find($id);
     if($obj->rents){
       foreach($obj->rents as $r){
         $r->renter;
+      }
+    }
+    if($obj->tickets){
+      foreach($obj->tickets as $t){
+        $t->requester;
+        $t->agent;
+        $t->provider;
       }
     }
     if($obj == null){

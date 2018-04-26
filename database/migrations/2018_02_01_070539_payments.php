@@ -33,6 +33,7 @@ class Payments extends Migration
           $table->dateTime('due_date');
 
           $table->boolean('paid_out')->default(false);
+          $table->boolean('facturable')->default(false);
           $table->char('kind', 1)->default('x'); //r -> Rent | x -> undefined | t -> ticket |
 
           $table->foreign('charge_to')->references('id')->on('customers')->onDelete('cascade');
